@@ -1,0 +1,14 @@
+{
+  "$comment": "Default RSS feeds. Seeded into the rss_feeds table and editable in /admin. 'keywords' (case-insensitive) filters general crypto feeds down to Solana stories; omit it for Solana-only feeds.",
+  "feeds": [
+    { "id": "solana-news", "name": "Solana News", "url": "https://solana.com/news/rss.xml", "category": "official", "enabled": true },
+    { "id": "helius-blog", "name": "Helius Blog", "url": "https://www.helius.dev/blog/rss.xml", "category": "project", "enabled": true },
+    { "id": "marinade-blog", "name": "Marinade Blog", "url": "https://www.marinade.finance/blog/rss.xml", "category": "project", "enabled": true },
+    { "id": "cointelegraph-solana", "name": "Cointelegraph · Solana", "url": "https://cointelegraph.com/rss/tag/solana", "category": "news", "enabled": true },
+    { "id": "coindesk", "name": "CoinDesk", "url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "category": "news", "keywords": ["solana", " sol ", "jupiter", "phantom", "pump.fun", "firedancer"], "enabled": true },
+    { "id": "theblock", "name": "The Block", "url": "https://www.theblock.co/rss.xml", "category": "news", "keywords": ["solana", " sol ", "jupiter", "phantom", "pump.fun", "firedancer"], "enabled": true },
+    { "id": "blockworks", "name": "Blockworks", "url": "https://blockworks.co/feed", "category": "news", "keywords": ["solana", " sol ", "jupiter", "phantom", "pump.fun", "firedancer"], "enabled": true },
+    { "id": "decrypt", "name": "Decrypt", "url": "https://decrypt.co/feed", "category": "news", "keywords": ["solana", " sol ", "jupiter", "phantom", "pump.fun", "firedancer"], "enabled": true },
+    { "id": "the-defiant", "name": "The Defiant", "url": "https://thedefiant.io/feed", "category": "news", "keywords": ["solana", " sol ", "jupiter", "phantom", "pump.fun", "firedancer"], "enabled": true }
+  ]
+}

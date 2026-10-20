@@ -1,0 +1,48 @@
+# Fallback / supplementary scheduler. Vercel Hobby crons run at most once a day,
+# so the 4-hourly refresh and balance re-checks are driven from here.
+# Required repository secrets: APP_URL (e.g. https://solbrief.vercel.app) and CRON_SECRET.
+name: scheduled-jobs
+
+on:
+  schedule:
+    - cron: "0 */4 * * *"   # light refresh + balance re-check every 4h
+    - cron: "5 12 * * *"    # daily brief fallback (no-op if Vercel Cron already published)
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Which job to run"
+        required: true
+        default: refresh
+        type: choice
+        options: [refresh, daily, balances]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Pick job
+        id: pick
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "job=${{ inputs.job }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "5 12 * * *" ]; then
+            echo "job=daily" >> "$GITHUB_OUTPUT"
+          else
+            echo "job=refresh" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Call protected cron route
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          set -euo pipefail
+          job="${{ steps.pick.outputs.job }}"
+          call() {
+            curl -sS --fail-with-body --max-time 320 -X POST \
+              -H "Authorization: Bearer ${CRON_SECRET}" \
+              "${APP_URL%/}/api/cron/$1"
+            echo
+          }
+          call "$job"
+          if [ "$job" = "refresh" ]; then call balances; fi
