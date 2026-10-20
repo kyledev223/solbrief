@@ -17,7 +17,13 @@ const flagsText = (t: TokenFact) => {
 export function templateItems(section: SectionId, f: FactsPack): BriefItem[] | null {
   const idx = buildFactIndex(f);
   const byId = tokensById(f);
-  const src = (...ids: string[]) => ids.filter((id) => idx.has(id)).map((id) => idx.get(id)!);
+  const src = (...ids: string[]) => {
+    const seen = new Set<string>();
+    return ids
+      .filter((id) => idx.has(id))
+      .map((id) => idx.get(id)!)
+      .filter((x) => (seen.has(x.url) ? false : (seen.add(x.url), true)));
+  };
   const item = (headline: string, body: string, factIds: string[], tokenIds: string[] = []): BriefItem => ({
     type: "VERIFIED",
     headline,
@@ -85,7 +91,7 @@ export function templateItems(section: SectionId, f: FactsPack): BriefItem[] | n
       return f.news.length
         ? f.news.slice(0, 6).map((n) => {
             const it = item(n.title, n.summary ? n.summary.slice(0, 260) : `Reported by ${n.source}.`, [n.id]);
-            it.sources.push(...relatedSources(f, [n.id]));
+            it.sources.push(...relatedSources(f, [n.id]).filter((r) => !it.sources.some((x) => x.url === r.url)));
             return it;
           })
         : null;
