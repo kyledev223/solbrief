@@ -12,7 +12,10 @@ const INSTALL: Record<string, string> = {
   Phantom: "https://phantom.com/download",
   Solflare: "https://solflare.com/download",
   Backpack: "https://backpack.app/download",
+  "OKX Wallet": "https://web3.okx.com/download",
 };
+
+const isOkx = (name: string) => /okx/i.test(name);
 
 const short = (a: string) => `${a.slice(0, 4)}…${a.slice(-4)}`;
 
@@ -87,8 +90,13 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
   };
 
   const signedIn = me?.wallet;
-  const detected = wallets.filter((w) => w.readyState === WalletReadyState.Installed || w.readyState === WalletReadyState.Loadable);
-  const missing = ["Phantom", "Solflare", "Backpack"].filter((n) => !detected.some((w) => w.adapter.name === n));
+  // OKX can appear twice (Wallet Standard registration + our injected-provider adapter); keep the first.
+  const detected = wallets
+    .filter((w) => w.readyState === WalletReadyState.Installed || w.readyState === WalletReadyState.Loadable)
+    .filter((w, i, all) => !isOkx(w.adapter.name) || all.findIndex((x) => isOkx(x.adapter.name)) === i)
+    // installed extensions first, "open app" (mobile/web) options after
+    .sort((a, b) => Number(b.readyState === WalletReadyState.Installed) - Number(a.readyState === WalletReadyState.Installed));
+  const missing = Object.keys(INSTALL).filter((n) => !detected.some((w) => w.adapter.name === n || (isOkx(n) && isOkx(w.adapter.name))));
 
   if (signedIn) {
     return (
@@ -156,7 +164,7 @@ export function ConnectButton({ compact = false }: { compact?: boolean }) {
                   {/* eslint-disable-next-line @next/next/no-img-element -- wallet-provided data URI icons */}
                   <img src={w.adapter.icon} alt="" width={22} height={22} className="rounded" />
                   <span className="flex-1">{w.adapter.name}</span>
-                  <span className="text-[10px] text-cyan">detected</span>
+                  <span className="text-[10px] text-cyan">{w.readyState === WalletReadyState.Installed ? "detected" : "open app ↗"}</span>
                 </button>
               </li>
             ))}

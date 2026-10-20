@@ -39,7 +39,7 @@ An AI agent that publishes a daily brief of the Solana ecosystem. Deterministic 
 | App | Next.js 16 (App Router, Cache Components) · TypeScript · Tailwind CSS v4 |
 | Database | Supabase Postgres (free tier). A JSON file store is used in local dev when Supabase isn't configured |
 | LLM | Google Gemini via `@google/genai`. Default `gemini-3.8-flash` (current free-tier stable Flash), with fallback `gemini-3.5-flash-lite` |
-| Wallets | `@solana/wallet-adapter-react` (Phantom, Solflare, Backpack and any Wallet Standard wallet) |
+| Wallets | `@solana/wallet-adapter-react` (Phantom, Solflare, Backpack, OKX Wallet and any Wallet Standard wallet) |
 | Auth | Sign-In With Solana (signed message, no transaction) → HS256 JWT in an httpOnly cookie |
 | Jobs | Vercel Cron (daily) + GitHub Actions (every 4h and daily fallback) calling protected routes |
 | Tests | Vitest (+ PGlite to run the real SQL migration in-process) |
