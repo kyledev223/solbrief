@@ -214,7 +214,9 @@ export function detectSignals(
 
   for (const p of pairs) {
     const tokenId = `tok:${p.tokenAddress}`;
-    const spike = detectVolumeSpike(p.volumeH24, volumeBaselines.get(p.pairAddress), cfg);
+    const age = pairAgeHours(p.pairCreatedAt, now);
+    // Dust pools produce huge percentages on tiny absolute moves; ignore them.
+    const spike = p.liquidityUsd >= cfg.minLiquidityForRankingUsd ? detectVolumeSpike(p.volumeH24, volumeBaselines.get(p.pairAddress), cfg) : null;
     if (spike) {
       tag(p.tokenAddress, "VOLUME_SPIKE");
       anomalies.push({
@@ -233,10 +235,10 @@ export function detectSignals(
       });
     }
 
-    const liq = detectLiquidityMove(p.liquidityUsd, liquidityBaselines.get(p.pairAddress), cfg);
-    // A brand-new pair "gaining" liquidity is just its launch; skip those.
-    const age = pairAgeHours(p.pairCreatedAt, now);
-    if (liq && !(age != null && age < 24 && liq.pct > 0)) {
+    // A 24h liquidity delta is meaningless for pairs younger than 24h.
+    const liq = age != null && age < 24 ? null : detectLiquidityMove(p.liquidityUsd, liquidityBaselines.get(p.pairAddress), cfg);
+    const priorLiq = liq ? (liq.prev ?? p.liquidityUsd / (1 + liq.pct / 100)) : 0;
+    if (liq && Math.max(p.liquidityUsd, priorLiq) >= cfg.minLiquidityForRankingUsd) {
       tag(p.tokenAddress, "LIQUIDITY_MOVE");
       anomalies.push({
         id: `anom:liq:${p.tokenAddress}`,

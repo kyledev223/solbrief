@@ -64,6 +64,8 @@ export interface NewsFact {
   url: string;
   publishedAt: string | null;
   summary: string;
+  /** Other outlets covering the same story. */
+  related?: Array<{ source: string; url: string }>;
 }
 
 export interface MarketFact {

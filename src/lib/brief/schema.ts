@@ -111,3 +111,15 @@ export const ResearchOutputSchema = z.object({
   openQuestions: z.array(z.string().max(300)).max(8),
 });
 export type ResearchOutput = z.infer<typeof ResearchOutputSchema>;
+
+/** Stored Deep Research report (server-resolved sources + risk flags). */
+export interface ResearchReport {
+  title: string;
+  summary: string;
+  sections: Array<{ heading: string; items: BriefItem[] }>;
+  openQuestions: string[];
+  tokens: TokenMention[];
+  sources: Source[];
+  model: string | null;
+  generatedAt: string;
+}

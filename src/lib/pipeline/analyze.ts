@@ -15,6 +15,7 @@ import { backfillDailyVolumes } from "../fetchers/geckoterminal";
 import { tokenInfo } from "../fetchers/jupiter";
 import { RpcClient } from "../fetchers/rpc";
 import { lpLockInfo } from "../fetchers/rugcheck";
+import { clusterNews } from "../fetchers/rss";
 import type { JupiterTokenInfo } from "../fetchers/types";
 import type { FactsPack, MarketFact, NewsFact, RunStats } from "../types";
 import type { Collected } from "./collect";
@@ -97,14 +98,17 @@ export async function analyze(ctx: FetchContext, store: Store, data: Collected, 
   const included = new Set(tokens.map((t) => t.mint));
 
   const market = toMarketFact(data);
-  const news: NewsFact[] = data.news.slice(0, 25).map((n, i) => ({
-    id: `news:${i + 1}`,
-    source: n.sourceName,
-    title: n.title,
-    url: n.link,
-    publishedAt: n.publishedAt,
-    summary: n.summary.slice(0, 280),
-  }));
+  const news: NewsFact[] = clusterNews(data.news)
+    .slice(0, 25)
+    .map(({ primary: n, related }, i) => ({
+      id: `news:${i + 1}`,
+      source: n.sourceName,
+      title: n.title,
+      url: n.link,
+      publishedAt: n.publishedAt,
+      summary: n.summary.slice(0, 280),
+      related: related.map((r) => ({ source: r.sourceName, url: r.link })),
+    }));
 
   const anomalies = signals.anomalies.filter((a) => included.has(a.mint));
   const stats: RunStats = {

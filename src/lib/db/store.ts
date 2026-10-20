@@ -1,4 +1,4 @@
-import type { Brief, BriefSection, ResearchOutput, AskAnswer } from "../brief/schema";
+import type { Brief, BriefSection, ResearchReport, AskAnswer } from "../brief/schema";
 import type { FeedConfig, FetchLog, NewsItem, PairData } from "../fetchers/types";
 import type { FactsPack, RunStats, Tier, Topic } from "../types";
 
@@ -73,7 +73,7 @@ export interface ResearchRow {
   wallet: string;
   query: string;
   status: "pending" | "complete" | "failed";
-  content: (ResearchOutput & { sources: { label: string; url: string }[]; facts?: unknown }) | null;
+  content: ResearchReport | null;
   error: string | null;
   createdAt: string;
   completedAt: string | null;

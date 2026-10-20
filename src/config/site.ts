@@ -75,7 +75,7 @@ export const ANOMALY = {
   top10ConcentrationPct: 50,
   /** LP locked/burned below this share is flagged as unlocked. */
   lpLockedMinPct: 80,
-  /** Ignore dust pairs for gainers/volume rankings. */
+  /** Ignore dust pairs for rankings and volume/liquidity anomalies. */
   minLiquidityForRankingUsd: 25_000,
   /** Max tokens enriched with on-chain risk data per run. */
   maxTokensOfInterest: 30,

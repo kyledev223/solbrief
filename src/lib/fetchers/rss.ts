@@ -133,3 +133,27 @@ export async function fetchFeeds(feeds: FeedConfig[], ctx: FetchContext): Promis
     })
     .sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
 }
+
+const STOP = new Set(["the", "and", "for", "with", "from", "into", "its", "this", "that", "after", "over", "amid", "says", "has", "have", "are", "was", "will", "new"]);
+const titleWords = (t: string) => new Set(t.toLowerCase().replace(/[^a-z0-9$ ]/g, " ").split(/\s+/).filter((w) => w.length >= 3 && !STOP.has(w)));
+
+/** Jaccard similarity of significant title words. */
+export function titleSimilarity(a: string, b: string): number {
+  const A = titleWords(a);
+  const B = titleWords(b);
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const w of A) if (B.has(w)) inter++;
+  return inter / (A.size + B.size - inter);
+}
+
+/** Group items covering the same story (input order = priority). */
+export function clusterNews<T extends { title: string }>(items: T[], threshold = 0.35): Array<{ primary: T; related: T[] }> {
+  const clusters: Array<{ primary: T; related: T[] }> = [];
+  for (const item of items) {
+    const c = clusters.find((x) => titleSimilarity(x.primary.title, item.title) >= threshold);
+    if (c) c.related.push(item);
+    else clusters.push({ primary: item, related: [] });
+  }
+  return clusters;
+}
