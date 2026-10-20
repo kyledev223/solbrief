@@ -82,6 +82,7 @@ Create these in this order. Each step lists the variables it produces. The full 
    3. **Project Settings → API**: copy the Project URL and the `service_role` secret.
    - `SUPABASE_URL`
    - `SUPABASE_SERVICE_ROLE_KEY` (server-only, never expose it to the browser)
+   - Using the **Vercel Supabase integration** instead? It sets these for you (`NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` are also accepted). You still have to run the two SQL files above in the Supabase SQL editor; the integration does not create tables.
 4. **Helius RPC** (free): <https://dashboard.helius.dev>
    - `SOLANA_RPC_URL=https://mainnet.helius-rpc.com/?api-key=YOUR_KEY`
    - Without it, the public RPC is used. It rate-limits `getTokenLargestAccounts`, so top-10 concentration falls back to Jupiter's audit data.
@@ -90,8 +91,10 @@ Create these in this order. Each step lists the variables it produces. The full 
    - `SESSION_SECRET`: `openssl rand -base64 48` (32+ chars, required in production)
    - `CRON_SECRET`: `openssl rand -hex 32`
    - `ADMIN_WALLETS`: comma-separated wallet addresses allowed into `/admin`
-6. **Token (at launch):**
-   - `NEXT_PUBLIC_TOKEN_MINT`: the `$BRIEF` SPL mint. Until it's set, everyone is FREE tier and the landing page says the address isn't published yet.
+6. **Token & socials (at launch):**
+   - `NEXT_PUBLIC_TOKEN_MINT`: the `$BRIEF` SPL mint. Until it's set, everyone is FREE tier, the landing page says the address isn't published yet, and the pump.fun button is hidden.
+   - `NEXT_PUBLIC_X_HANDLE`: X account (`solbrief`, `@solbrief` or a full URL). Empty hides the X button.
+   - Both are `NEXT_PUBLIC_` values, which are baked in at build time. **Redeploy after changing them.**
 7. **Optional source keys** (raise rate limits):
    - `COINGECKO_API_KEY`: CoinGecko Demo key (<https://www.coingecko.com/en/api>)
    - `JUPITER_API_KEY`: <https://portal.jup.ag> (without it, keyless `lite-api.jup.ag` is used)

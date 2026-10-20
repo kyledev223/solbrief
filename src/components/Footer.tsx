@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { APP_NAME, APP_SLUG, SITE } from "@/config/site";
+import { SocialButtons } from "./SocialButtons";
 
 const MAP = [
   { dir: "brief", items: [["/brief/today", "today"], ["/archive", "archive"]] },
@@ -14,6 +15,9 @@ export function Footer() {
         <div>
           <div className="font-extrabold text-ink">{APP_NAME}</div>
           <p className="mt-2 text-xs leading-relaxed text-faint">{SITE.tagline}</p>
+          <div className="mt-3">
+            <SocialButtons />
+          </div>
         </div>
         {MAP.map((g) => (
           <div key={g.dir} className="text-xs">

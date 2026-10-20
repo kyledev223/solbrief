@@ -28,6 +28,20 @@ export const TOKEN = {
   },
 } as const;
 
+/** X account: a handle ("solbrief", "@solbrief") or a full URL. Empty hides the button. */
+function xUrl(v: string | undefined): string {
+  const s = (v ?? "").trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s)) return s;
+  return `https://x.com/${s.replace(/^@/, "")}`;
+}
+
+export const SOCIAL = {
+  x: xUrl(process.env.NEXT_PUBLIC_X_HANDLE),
+  /** pump.fun page for the token; empty until the mint is set. */
+  pumpfun: TOKEN.mint ? TOKEN.links(TOKEN.mint).pumpfun : "",
+} as const;
+
 export type Tier = "FREE" | "HOLDER" | "WHALE";
 
 /** Tier thresholds, in whole tokens (UI amount, not base units). */

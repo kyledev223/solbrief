@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { APP_NAME, NAV } from "@/config/site";
 import { ConnectButton } from "./ConnectButton";
+import { SocialButtons } from "./SocialButtons";
 
 export function Nav() {
   return (
@@ -22,6 +23,7 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <SocialButtons />
           <div className="hidden sm:block">
             <ConnectButton compact />
           </div>

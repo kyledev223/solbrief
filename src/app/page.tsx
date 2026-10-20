@@ -4,6 +4,7 @@ import { APP_NAME, FAQ, SITE, TOKEN } from "@/config/site";
 import { AsciiLogo } from "@/components/AsciiLogo";
 import { ItemCard, type MentionToken } from "@/components/BriefView";
 import { CopyButton, PromptInput, TypingText } from "@/components/client-bits";
+import { SocialButtons } from "@/components/SocialButtons";
 import { TierTable } from "@/components/tiers";
 import { TokenCard } from "@/components/TokenCard";
 import { CmdLink, Container, Panel, SectionHeader, Skeleton, Stat } from "@/components/ui";
@@ -83,6 +84,9 @@ function Hero() {
         </CmdLink>
         <CmdLink href="/docs">how it works</CmdLink>
         <CmdLink href="/archive">/archive</CmdLink>
+      </div>
+      <div className="mt-3">
+        <SocialButtons variant="full" />
       </div>
     </Container>
   );

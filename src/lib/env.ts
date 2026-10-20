@@ -2,8 +2,9 @@ import "server-only";
 
 /** Server-side environment access with explicit "is this configured?" helpers. */
 export const env = {
-  supabaseUrl: process.env.SUPABASE_URL ?? "",
-  supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
+  // Vercel's Supabase integration also exposes NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SECRET_KEY
+  supabaseUrl: process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || "",
   geminiKey: process.env.GEMINI_API_KEY ?? "",
   rpcUrl: process.env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com",
   coingeckoKey: process.env.COINGECKO_API_KEY ?? "",

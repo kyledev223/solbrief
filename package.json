@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "pipeline": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/run-pipeline.ts",
-    "smoke": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/smoke-fetchers.ts"
+    "smoke": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/smoke-fetchers.ts",
+    "brand": "tsx scripts/render-brand.tsx"
   },
   "dependencies": {
     "@google/genai": "^2.30.0",
