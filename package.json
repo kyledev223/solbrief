@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "pipeline": "tsx --env-file-if-exists=.env.local scripts/run-pipeline.ts"
+    "pipeline": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/run-pipeline.ts",
+    "smoke": "tsx --conditions=react-server --env-file-if-exists=.env.local scripts/smoke-fetchers.ts"
   },
   "dependencies": {
     "@google/genai": "^2.30.0",
